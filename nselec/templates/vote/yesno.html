@@ -1,0 +1,16 @@
+{% extends "vote/base.html" %}
+{% block options %}
+<div class="field">
+  <label class="label">Are you voting <em>for</em> or <em>against</em> this?</label>
+  <div class="control">
+    <label class="radio">
+      <input type="radio" name="vote" value="for">
+      For
+    </label>
+    <label class="radio">
+      <input type="radio" name="vote" value="against">
+      Against
+    </label>
+  </div>
+</div>
+{% endblock %}

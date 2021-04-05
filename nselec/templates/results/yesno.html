@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ el.name }}{% endblock %}
+{% block heading %}
+<h1 class="title is-1">{{ el.name }}</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="{{url_for('index')}}">{{config.TITLE_SHORT}}</a></li>
+    <li class="is-active"><a href='#'>Results</a></li>
+    <li class="is-active"><a href="#" aria-current="page">{{ el.name }}</a></li>
+  </ul>
+</nav>
+{% endblock %}
+{% block main %}
+<div class="content">
+  <p class="is-3">{{ el.desc }} - Finished
+    <time datetime="{{el.times.end | iso_dt}}" title="{{el.times.end | iso_dt}}">
+      {{el.times.end | iso_dt}} ({{ el.times.end | human_dt }})
+    </time>
+  </p>
+  {% if processed_results == "for" %}
+  <h2>Result:</h1>
+    <p>"For" got the most votes.</p>
+    <h2>Votes:</h2>
+    <p>For: {{ results.for }}</p>
+    <p>Against: {{ results.against }}</p>
+    {% elif processed_results == "against" %}
+    <h2>Result:</h1>
+      <p>"Against" got the most votes.</p>
+      <h2>Votes:</h2>
+      <p>Against: {{ results.against }}</p>
+      <p>For: {{ results.for }}</p>
+      {% else %}
+      <h2>Result:</h1>
+        <p>It's a draw.</p>
+        <h2>Votes:</h2>
+        <p>For: {{ results.for }}</p>
+        <p>Against: {{ results.against }}</p>
+        {% endif %}
+        <h2>Participating Voters:</h2>
+        <ul>
+          {% for v in voters %}
+          <li>{{v}}</li>
+          {% endfor %}
+        </ul>
+</div>
+{% endblock %}

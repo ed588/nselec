@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}New user{% endblock %}
+{% block heading %}
+<h1 class="title">New user</h1>
+{% endblock %}
+{% block main %}
+{% if tok is not none %}
+<div class="content">
+  <p>Done! The signup token generated is <code>{{tok|string}}</code>. Tell the user to go to
+    the signup page <a href="{{url_for('auth.signup')}}">here</a> ({{url_for('auth.signup')}}),
+    and enter that token there. The token will expire in <b>two minutes</b>
+  </p>
+  <p>Note: when the user gets created, they will be an ordinary user initially. If you want them to
+    be an admin then promote them manually once they have signed up.
+  </p>
+</div>
+{% else %}
+<form method=POST>
+  <div class="field">
+    <label class="label">Username</label>
+    <div class="control">
+      <input name=username class="input" type="text">
+    </div>
+  </div>
+  <div class="field">
+    <div class="control">
+      <button class="button is-link">Submit</button>
+    </div>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

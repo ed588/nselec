@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block heading %}
+<h1 class="title">Election Archive</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+        <li><a href="{{url_for('index')}}">{{config.TITLE_SHORT}}</a></li>
+        <li class="is-active"><a href='#'>Archive</a></li>
+    </ul>
+</nav>
+{% endblock %}
+{% block title %}Election Archive{% endblock %}
+{% block main %}
+<p>These are all the elections that have ever been run, from most recent to least recent.</p>
+<table class="table is-hoverable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Ended</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for el in els %}
+        <tr>
+            <td>{{ el.name | truncate(100) }}</td>
+            <td>
+                <time datetime="{{el.times.end | iso_dt}}" title="{{el.times.end | iso_dt}}">
+                    {{ el.times.end | iso_dt }}
+                </time>
+            </td>
+            <td>
+                <a href="{{url_for('results.results', el_id=el.doc_id)}}">
+                    <span class="icon"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{%endblock%}

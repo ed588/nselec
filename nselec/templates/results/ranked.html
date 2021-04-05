@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ el.name }}{% endblock %}
+{% block heading %}
+<h1 class="title is-1">{{ el.name }}</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="{{url_for('index')}}">{{config.TITLE_SHORT}}</a></li>
+    <li class="is-active"><a href='#'>Results</a></li>
+    <li class="is-active"><a href="#" aria-current="page">{{ el.name }}</a></li>
+  </ul>
+</nav>
+{% endblock %}
+{% block main %}
+<div class="content">
+  <p class="is-3">{{ el.desc }} - Finished
+    <time datetime="{{el.times.end | iso_dt}}" title="{{el.times.end | iso_dt}}">
+      {{el.times.end | iso_dt}} ({{ el.times.end | human_dt }})
+    </time>
+  </p>
+  <h2>Result:</h1>
+    {% if winner == None %}
+    <p>The voting result was a draw</p>
+    {% else %}
+    <p>{{ el['options'][winner|int] }} is the winning option</p>
+    {% endif %}
+    <h2>Votes:</h2>
+    <ul>
+      {% for res in processed_results %}
+      <li>{{ " &rarr; ".join(res) |safe}}</li>
+      {% endfor %}
+    </ul>
+    <h2>Participating Voters:</h2>
+    <ul>
+      {% for v in voters %}
+      <li>{{v}}</li>
+      {% endfor %}
+    </ul>
+</div>
+{% endblock %}

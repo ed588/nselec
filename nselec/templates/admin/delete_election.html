@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delete election{% endblock %}
+{% block heading %}
+<h1 class="title">Delete election</h1>
+{% endblock %}
+{% block main %}
+<div class="content">
+  <p>Are you sure you want to delete {{ el.name }}? <b>This cannot be undone!</b></p>
+  <form method="post">
+    <button class="button is-danger">Yes</button>
+    <a href="{{url_for('admin.elections')}}" class="button">No</a>
+</div>
+{% endblock %}

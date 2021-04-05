@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Election List{% endblock %}
+{% block heading %}<h1 class="title is-1">{{config.TITLE_MAINPAGE}}</h1>{% endblock %}
+{% macro election_box(name, desc, timestring, dt, button_text=None,
+button_url=None, button_type="link",
+before_date=None)
+%}
+<div class="box">
+  <div class="content">
+    <p class="is-size-4 has-text-grey-dark">{{name|e}}</p>
+    <p class="is-size-6 has-text-grey">{{desc|e}}</p>
+    <p class="is-size-7 has-text-grey-light">
+      {% if before_date %}{{before_date}} | {% endif %}
+      <time datetime="{{dt | iso_dt }}" title="{{dt | iso_dt }}">{{ timestring + dt|human_dt }}</time></p>
+    {% if button_text and button_url %}
+    <a class="button is-{{button_type}}" href="{{button_url}}">
+      <span>{{ button_text|e }}</span>
+      <span class="icon is-small">
+        <i class="fas fa-arrow-circle-right"></i>
+      </span>
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}
+{% block main %}
+{% if present %}
+<h2 class="title is-3">Current</h2>
+{% for el in present %}
+{{ election_box(el.name, el.desc, "Finishes ", el.times.end, "Vote", url_for('vote.election', el_id=el.doc_id),
+before_date="{} vote{} so far".format(el.voters|length, "s" if el.voters|length != 1 else "")) }}
+{% endfor %}
+{% endif %}
+{% if future %}
+<h2 class="title is-3">Future</h2>
+{% for el in future %}
+{{ election_box(el.name, el.desc, "Starts ", el.times.start) }}
+{% endfor %}
+{% endif %}
+<h2 class="title is-3">Past</h2>
+<p>
+  Showing only elections that finished in the past 2 weeks.
+  For older elections, please visit the
+  <a href="{{url_for('archive.archive')}}">Archive</a>.
+</p>
+{% if not past %}
+<br>
+<p><em>No elections are recent enough to be shown here.</em></p>
+{% endif %}
+{% for el in past %}
+{{ election_box(el.name, el.desc, "Finished ", el.times.end, "View results", url_for('results.results',
+el_id=el.doc_id))}}
+{% endfor %}
+{% if not (present or past or future) %}
+<p class="is-size-5 has-text-grey"><em>It doesn't look like there are any elections...</em></p>
+{% endif %}
+{% endblock %}

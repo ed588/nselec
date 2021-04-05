@@ -1,0 +1,57 @@
+{% macro msgb(msg, cls="info") %}
+<div class="notification is-{{cls}}">
+  <button class="delete" onclick="this.parentElement.parentElement.removeChild(this.parentElement)"></button>
+  {{ msg }}
+</div>
+{% endmacro %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} - {{config.TITLE_SHORT}}</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='site.min.css')}}">
+  <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+  <link rel=icon href="{{config.FAVICON}}">
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+  <section class="section">
+    <div class="container">
+      {% block heading %}
+      <h1 class="title">Elections</h1>
+      {% endblock %}
+      {% for msg in get_flashed_messages(category_filter=["message"]) %}
+      {{ msgb(msg) }}
+      {% endfor %}
+      {% for msg in get_flashed_messages(category_filter=["error"]) %}
+      {{ msgb(msg, "danger") }}
+      {% endfor %}
+      {% for msg in get_flashed_messages(category_filter=["success"]) %}
+      {{ msgb(msg, "success") }}
+      {% endfor %}
+      {% block main %}
+      <p>{{ content }}</p>
+      <p><a href="{{url_for('index')}}">Click here to go back to the main page</a></p>
+      {% endblock %}
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p><strong>{{config.TITLE_LONG}}</strong></p>
+      <p>
+        {% if "user" in session %}
+        Logged in as <b>{{session.user}}</b>. <a href="{{url_for('admin.index')}}">Admin Page</a> | <a href="{{url_for('auth.logout')}}">Logout</a>
+        {% else %}
+        To manage elections, please <a href="{{url_for('auth.login')}}">login</a> first.
+        {% endif %}
+      </p>
+      <p><a href="{{url_for('pages.page', name='about')}}">About this site</a></p>
+      <p><i>Powered by nselec v{{version}}</i></p>
+    </div>
+  </footer>
+</body>
+
+</html>

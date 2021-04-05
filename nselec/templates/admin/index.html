@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Admin page{% endblock %}
+{% block heading %}
+<h1 class="title">Admin page</h1>
+{% endblock %}
+{% block main %}
+<div class="content">
+  <p>Welcome to the administration index! You are logged in as <b>{{ session.user }}</b>.</p>
+  <p>You can:</p>
+  <ul>
+    <li><a href="{{url_for('admin.elections')}}">View, create, and edit elections</a></li>
+    {% if user.role > 0 %}
+    <li><a href="{{url_for('admin.users')}}">Manage users</a></li>
+    {% endif %}
+  </ul>
+</div>
+{% endblock %}

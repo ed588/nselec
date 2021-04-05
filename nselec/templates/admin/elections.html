@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Manage Elections{% endblock %}
+{% block heading %}
+<h1 class="title is-1">Manage Elections</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="{{url_for('index')}}">{{config.TITLE_SHORT}}</a></li>
+    <li><a href="{{url_for('admin.index')}}">Administration</a></li>
+    <li class="is-active"><a href="#" aria-current="page">Manage elections</a></li>
+  </ul>
+</nav>
+{% endblock %}
+{% block main %}
+<h2 class="title is-3">Future elections</h2>
+<a href="{{url_for('admin.new_yesno')}}" class="button is-link">Create new for/against election</a>
+<a href="{{url_for('admin.new_ranked')}}" class="button is-link">Create new ranked election</a>
+<table class="table is-hoverable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Starts</th>
+      <th>Ends</th>
+      <th>Last Modified By</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for el in future %}
+    <tr>
+      <td>{{ el.name }}</td>
+      <td>{{ el.type }}</td>
+      <td><time datetime="{{el.times.start | iso_dt}}"
+          title="{{el.times.start | iso_dt}}">{{ el.times.start | human_dt }}</time></td>
+      <td><time datetime="{{el.times.end | iso_dt}}"
+          title="{{el.times.end | iso_dt}}">{{ el.times.end | human_dt }}</time></td>
+      <td>
+        {% if 'lastchanged' in el %}
+        {{el.lastchanged}}
+        {% else %}
+        <i>Unknown</i>
+        {%endif%}
+      </td>
+      <td><a href="{{url_for('admin.edit_election', el_id=el.doc_id)}}"><span class="icon"><i
+              class="fas fa-edit"></i></span></a></td>
+      <td><a href="{{url_for('admin.delete_election', el_id=el.doc_id)}}"><span class="icon"><i
+              class="fas fa-trash"></i></span></a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h2 class="title is-3">Current Elections</h2>
+<p>Note that editing current and past elections is not allowed.</p>
+<table class="table is-hoverable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Started</th>
+      <th>Ends</th>
+      <th>Last Modified By</th>
+      <th>Vote</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for el in present %}
+    <tr>
+      <td>{{ el.name }}</td>
+      <td>{{ el.type }}</td>
+      <td><time datetime="{{el.times.start | iso_dt}}"
+          title="{{el.times.start | iso_dt}}">{{ el.times.start | human_dt }}</time></td>
+      <td><time datetime="{{el.times.end | iso_dt}}"
+          title="{{el.times.end | iso_dt}}">{{ el.times.end | human_dt }}</time></td>
+      <td>
+        {% if 'lastchanged' in el %}
+        {{el.lastchanged}}
+        {% else %}
+        <i>Unknown</i>
+        {%endif%}
+      </td>
+      <td><a href="{{url_for('vote.election', el_id=el.doc_id)}}"><span class="icon"><i
+              class="fas fa-arrow-right"></i></span></a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

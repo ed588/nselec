@@ -1,0 +1,43 @@
+{% extends "vote/base.html" %}
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.min.js"></script>
+<style>
+  .sortable-chosen {
+  color: #fff;
+  background-color: rgb(136, 22, 22);
+}
+</style>
+<script>
+  function updateOptOrder(sorter) {
+    var s = sorter.toArray().join(":");
+    document.getElementById("opts").value = s;
+  }
+  window.addEventListener("load", function () {
+    var opts = document.getElementById("options");
+    var sorter = Sortable.create(opts, {
+      draggable: ".box",
+      animation: 250,
+      onUpdate: function (e) {
+        updateOptOrder(sorter);
+      }
+    });
+    updateOptOrder(sorter);
+    var b = document.getElementById("btn");
+    b.disabled = false;
+    b.classList.remove("is-loading");
+  });
+</script>
+{% endblock %}
+{% block options %}
+<div class="field">
+  <label class="label">Please order the options.</label>
+  <p class=help>Click and drag to put the options into your prefered order - <b>most</b> favourite at the top, <b>least</b>
+    favourite at the bottom.<br>The options have been randomly shuffled to make voting fair.</p>
+  <ul id="options">
+    {% for idx, opt in el.options |shuffleopts %}
+    <li class="box" data-id='{{idx}}'><span class="icon is-small"><i class="fas fa-arrows-alt-v"></i></span>{{opt}}</li>
+    {%endfor%}
+  </ul>
+  <input type="hidden" id="opts" name="vote" value="">
+</div>
+{% endblock %}

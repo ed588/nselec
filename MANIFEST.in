@@ -1,0 +1,4 @@
+global-exclude *.pyc
+graft nselec/static
+graft nselec/templates
+prune instance

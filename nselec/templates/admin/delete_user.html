@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delete user{% endblock %}
+{% block heading %}
+<h1 class="title">Delete user</h1>
+{% endblock %}
+{% block main %}
+<div class="content">
+  <p>Are you sure you want to delete {{ username }}? <b>This cannot be undone!</b></p>
+  <form method="post">
+    <button class="button is-danger">Yes</button>
+    <a href="{{url_for('admin.users')}}" class="button">No</a>
+</div>
+{% endblock %}

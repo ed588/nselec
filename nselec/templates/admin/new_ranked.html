@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}New ranked election{% endblock %}
+{% block heading %}
+<h1 class="title">New ranked election</h1>
+{% endblock %}
+{% block head %}
+<script>
+  function htmlStringToElement(str) {
+    var tmp = document.createElement('div');
+    tmp.innerHTML = str.trim();
+    return tmp.firstChild;
+  }
+  function removeElement(element) {
+    element.parentElement.removeChild(element)
+  }
+  function makeDeleteButton(btn) {
+    btn.addEventListener("click", function (e) {
+      removeElement(this.parentElement.parentElement);
+    });
+  }
+  function addOption() {
+    var str = '<div class="field is-grouped">\
+    <div class="control">\
+      <input class="input" name=opt type=text>\
+    </div>\
+    <div class="control">\
+      <button type="button" class="button"><span class="icon"><i class="fas fa-trash"></i></span></button>\
+    </div>\
+  </div>';
+    var n = htmlStringToElement(str);
+    makeDeleteButton(n.children[1].children[0]);
+    document.getElementById("options").appendChild(n);
+  }
+  window.addEventListener("load", function (e) {
+    document.getElementById("add").addEventListener("click", addOption);
+    makeDeleteButton(document.getElementById("initialdel"));
+
+    var sub = document.getElementById("submit");
+    sub.disabled = false;
+    sub.classList.remove("is-loading")
+  });
+
+</script>
+{% endblock %}
+{% block main %}
+<div class="content">
+  <p>A ranked election has many options.</p>
+  <p>The voter must put <em>all</em> of these options in an order reflecting their preference.</p>
+</div>
+<form method=POST>
+  <div class="field">
+    <label class="label">Name</label>
+    <div class="control">
+      <input name=name class="input" type="text">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Description</label>
+    <div class="control">
+      <textarea type=text name=desc class="textarea"></textarea>
+    </div>
+  </div>
+  <label class="label">Start</label>
+  <div class="field has-addons">
+    <div class="control">
+      <input name=start_date class="input" type="date">
+    </div>
+    <div class="control">
+      <input name=start_time class="input" type="time">
+    </div>
+  </div>
+  <label class="label">End</label>
+  <div class="field has-addons">
+    <div class="control">
+      <input name=end_date class="input" type="date">
+    </div>
+    <div class="control">
+      <input name=end_time class="input" type="time">
+    </div>
+  </div>
+  <label class="label">Options</label>
+  <p>Note that the order of the options doesn't matter, they will be randomized when people see them</p>
+  <div id="options" style="padding-bottom:10px;">
+    <div class="field is-grouped">
+      <div class="control">
+        <input class="input" name=opt type=text>
+      </div>
+      <div class="control">
+        <button id="initialdel" type="button" class="button"><span class="icon"><i class="fas fa-trash"></i></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control">
+      <button id="add" type="button" class="button"><span class="icon"><i class="fas fa-plus"></i></span></button>
+    </div>
+  </div>
+  <br>
+
+  <div class="field">
+    <div class="control">
+      <button id="submit" disabled class="button is-link is-loading">Submit</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "lib.j2" import verify_modal %}
+{% block title %}{{ el.name }}{% endblock %}
+{% block head %}
+<script>
+    window.addEventListener("load", function () {
+        var b = document.getElementById("btn");
+        b.disabled = false;
+        b.classList.remove("is-loading");
+    });
+</script>
+{% endblock %}
+{% block heading %}
+<h1 class="title is-1">{{ el.name }}</h1>
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+        <li><a href="{{url_for('index')}}">{{config.TITLE_SHORT}}</a></li>
+        <li class="is-active"><a href='#'>Vote</a></li>
+        <li class="is-active"><a href="#" aria-current="page">{{ el.name }}</a></li>
+    </ul>
+</nav>
+{% endblock %}
+{% block main %}
+{{ verify_modal }}
+<p class="is-3">{{ el.desc }}</p>
+<div class="content">
+    <form method="post" action="{{url_for('vote.submit',el_id=el_id)}}" enctype="multipart/form-data">
+        <div class="field">
+            <label class="label">Your Nation Name</label>
+            <div class="control">
+                <div class="select">
+                    <select name=nation>
+                        <option disabled selected>---Please Select---</option>
+                        {% for k,v in voters|dictsort %}
+                        <option value={{k}}>{{v}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <label class="label">Verification Code</label>
+        <div class="field is-grouped">
+            <div class="control">
+                <input name=verify class="input" type="text" placeholder="Enter verification code here">
+                <p class="help">Click "get code", copy the code, then enter it into the box</p>
+            </div>
+            <div class="control">
+                <a href="#" class="button show-verify-modal">Get code</a>
+            </div>
+        </div>
+        {% block options %}{% endblock %}
+        <button disabled="disabled" id="btn" class="button is-link is-loading">
+            <span>Submit Vote</span>
+            <span class="icon is-small">
+                <i class="fas fa-arrow-right"></i>
+            </span>
+        </button>
+    </form>
+</div>
+{% endblock %}

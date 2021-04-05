@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Edit ranked election{% endblock %}
+{% block heading %}
+<h1 class="title">Edit ranked election</h1>
+{% endblock %}
+{% block head %}
+<script>
+  var optstr = '<div class="field is-grouped">\
+  <div class="control">\
+    <input class="input" name=opt type=text>\
+  </div>\
+  <div class="control">\
+    <button type="button" class="button"><span class="icon"><i class="fas fa-trash"></i></span></button>\
+  </div>\
+</div>';
+
+  function htmlStringToElement(str) {
+    var tmp = document.createElement('div');
+    tmp.innerHTML = str.trim();
+    return tmp.firstChild;
+  }
+  function removeElement(element) {
+    element.parentElement.removeChild(element)
+  }
+  function makeDeleteButton(btn) {
+    btn.addEventListener("click", function (e) {
+      removeElement(this.parentElement.parentElement);
+    });
+  }
+  function addOption(s) {
+    if (typeof s != "string") {
+      s = "";
+    }
+    var n = htmlStringToElement(optstr);
+    makeDeleteButton(n.children[1].children[0]);
+    n.children[0].children[0].value = s;
+    document.getElementById("options").appendChild(n);
+  }
+  window.addEventListener("load", function (e) {
+    document.getElementById("add").addEventListener("click", addOption);
+    makeDeleteButton(document.getElementById("initialdel"));
+
+    var already_opts = JSON.parse("{{ el.options | tojson | safe }}");
+    document.getElementById("initialdel").click();
+    already_opts.forEach(addOption);
+
+    var sub = document.getElementById("submit");
+    sub.disabled = false;
+    sub.classList.remove("is-loading");
+  });
+
+</script>
+{% endblock %}
+{% block main %}
+<div class="content">
+  <p>A ranked election has many options.</p>
+  <p>The voter must put <em>all</em> of these options in an order reflecting their preference.</p>
+</div>
+<form method=POST>
+  <div class="field">
+    <label class="label">Name</label>
+    <div class="control">
+      <input name=name class="input" type="text" value="{{ el.name }}">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Description</label>
+    <div class="control">
+      <textarea type=text name=desc class="textarea">{{ el.desc }}</textarea>
+    </div>
+  </div>
+  <label class="label">Start</label>
+  <div class="field has-addons">
+    <div class="control">
+      <input name=start_date class="input" type="date" value="{{ el.times.start.dt.strftime('%Y-%m-%d') }}">
+    </div>
+    <div class="control">
+      <input name=start_time class="input" type="time" value="{{ el.times.start.dt.strftime('%H:%M') }}">
+    </div>
+  </div>
+  <label class="label">End</label>
+  <div class="field has-addons">
+    <div class="control">
+      <input name=end_date class="input" type="date" value="{{ el.times.end.dt.strftime('%Y-%m-%d') }}">
+    </div>
+    <div class="control">
+      <input name=end_time class="input" type="time" value="{{ el.times.end.dt.strftime('%H:%M') }}">
+    </div>
+  </div>
+  <label class="label">Options</label>
+  <p>Note that the order of the options doesn't matter, they will be randomized when people see them</p>
+  <div id="options" style="padding-bottom:10px;">
+    <div class="field is-grouped">
+      <div class="control">
+        <input class="input" name=opt type=text>
+      </div>
+      <div class="control">
+        <button id="initialdel" type="button" class="button"><span class="icon"><i class="fas fa-trash"></i></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control">
+      <button id="add" type="button" class="button"><span class="icon"><i class="fas fa-plus"></i></span></button>
+    </div>
+  </div>
+  <br>
+
+  <div class="field">
+    <div class="control">
+      <button id="submit" disabled class="button is-link is-loading">Submit</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
