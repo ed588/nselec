@@ -6,6 +6,8 @@ This repository contains the latest version of the software at the time that it 
 are not included in this repository for various reasons. If you need an old version for some specific reason,
 contact me.
 
+This software is licensed under the GNU Affero General Public License v3.0, or at your option any later version.
+
 Below is the original README file:
 
 # nselec
